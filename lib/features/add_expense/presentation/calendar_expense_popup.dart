@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../../../component/config/app_const.dart';
 import '../../../component/config/app_style.dart';
 import '../../../component/widget/popup_button.dart';
 
@@ -15,7 +16,7 @@ class CalendarExpensePopup extends StatefulWidget {
 
 class _CalendarExpensePopupState extends State<CalendarExpensePopup> {
   DateTime _currentDate = DateTime.now();
-  final String _locale = "id-ID";
+  final String _locale = AppConst.defaultLocale;
 
   @override
   void initState() {

@@ -64,3 +64,12 @@ enum ExpenseCategory {
     }
   }
 }
+
+extension ExpenseCategoryExtension on ExpenseCategory {
+  static ExpenseCategory fromLabel(String label) {
+    return ExpenseCategory.values.firstWhere(
+      (e) => e.label == label,
+      orElse: () => ExpenseCategory.makanan,
+    );
+  }
+}

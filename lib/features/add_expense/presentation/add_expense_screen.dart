@@ -185,19 +185,13 @@ class AddExpenseScreen extends GetView<AddExpenseController> {
                                 }).then((result) {
                               if (result != null) {
                                 final DateTime onValue = result['currentDate'];
-                                // _controller.startTimeCtr.text = '';
-                                // _controller.saveStartTime.value = null;
-                                // final timePlain = DateTime(
-                                //     onValue.year, onValue.month, onValue.day);
 
-                                String formattedDate =
-                                    DateFormat('EEEE, d MMMM y', "id-ID")
-                                        .format(onValue);
-                                // String saveDate =
-                                //     DateFormat('yyyy-MM-dd HH:mm:ss.SSSSSS')
-                                //         .format(timePlain);
+                                String formattedDate = DateFormat(
+                                        'EEEE, d MMMM y',
+                                        AppConst.defaultLocale)
+                                    .format(onValue);
+
                                 ctrl.dateExpenseController.text = formattedDate;
-                                // _controller.saveDate.value = saveDate;
                               }
                             });
                           },
@@ -255,7 +249,8 @@ class AddExpenseScreen extends GetView<AddExpenseController> {
                   child: GetBuilder<AddExpenseController>(builder: (ctrl) {
                     return PopupButton(
                       radius: 6,
-                      onPressed: ctrl.isValid == true ? () => Get.back() : null,
+                      onPressed:
+                          ctrl.isValid == true ? () => ctrl.addExpense() : null,
                       size: 50,
                       color: AppStyle.blue,
                       shadowColor: Color(0xff08788F),

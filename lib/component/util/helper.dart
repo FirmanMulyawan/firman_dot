@@ -68,8 +68,8 @@ class AlertModel {
                     Get.back(result: false);
                   },
                   size: 50,
-                  color: AppStyle.homeYoutubeRed,
-                  shadowColor: AppStyle.homeYoutubeHover,
+                  color: AppStyle.blue,
+                  shadowColor: Color(0xff08788F),
                   child: Text(
                     buttonText ?? 'Ok',
                     style: AppStyle.bold(

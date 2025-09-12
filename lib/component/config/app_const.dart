@@ -4,6 +4,7 @@ class AppConst {
   static String appName = "Money Expense";
   static bool isDebuggable = true;
   static String appUrl = dotenv.env['API_LINK']!;
+  static String defaultLocale = "id-ID";
 
   static String path = 'assets/';
 

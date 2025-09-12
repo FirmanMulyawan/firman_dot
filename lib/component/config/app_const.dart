@@ -17,6 +17,7 @@ class AppConst {
   static String iconClapperBoard = '${path}icons/uil_clapper-board.svg';
   static String iconGift = '${path}icons/uil_gift.svg';
   static String iconHome = '${path}icons/uil_home.svg';
+  static String iconMultiply = '${path}icons/uil_multiply.svg';
   static String iconPizzaSlice = '${path}icons/uil_pizza-slice.svg';
   static String iconUilPlus = '${path}icons/uil_plus.svg';
   static String iconRssAlt = '${path}icons/uil_rss-alt.svg';

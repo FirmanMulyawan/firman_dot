@@ -149,7 +149,7 @@ class _PopupButtonState extends State<PopupButton> {
     if (widget.onPressed != null) {
       return widget.color;
     } else {
-      return AppStyle.buttonDisabledColor;
+      return AppStyle.grey5;
     }
   }
 

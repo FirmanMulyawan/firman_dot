@@ -27,7 +27,7 @@ class AlertModel {
                 clipBehavior: Clip.hardEdge,
                 width: double.maxFinite,
                 decoration: BoxDecoration(
-                  color: AppStyle.pressedGreen,
+                  color: AppStyle.blue,
                   borderRadius: const BorderRadius.only(
                     topRight: Radius.circular(15),
                     topLeft: Radius.circular(15),
@@ -68,8 +68,8 @@ class AlertModel {
                     Get.back(result: false);
                   },
                   size: 50,
-                  color: AppStyle.mainRed,
-                  shadowColor: AppStyle.hoverRed,
+                  color: AppStyle.homeYoutubeRed,
+                  shadowColor: AppStyle.homeYoutubeHover,
                   child: Text(
                     buttonText ?? 'Ok',
                     style: AppStyle.bold(

@@ -1,16 +1,20 @@
-# firman_dot
+# Money Expense App
 
-A new Flutter project.
+Aplikasi mobile untuk mencatat, mengelola, dan memantau pengeluaran harian dengan Flutter.
 
-## Getting Started
+## Teknologi
+- Flutter: 3.27.4
+- iOS: Xcode 16.4
+- State Management: GetX
+- Database / Storage: sqflite
 
-This project is a starting point for a Flutter application.
+## Fitur Utama 
+1. Tambah pengeluaran.
+2. Tampilkan total pengeluaran harian dan bulanan.
+3. Tampilkan total pengeluaran berdasarkan kategori.
+4. Tampilkan daftar pengeluaran keseluruhan.
 
-A few resources to get you started if this is your first Flutter project:
+## Demo App
+- Link video: https://drive.google.com/file/d/15-oMGvZ2JIrRqBnvAONK6httv-RG6ZWn/view?usp=sharing 
+- Link Apk: https://drive.google.com/file/d/1_GpGo5JsfJ6qPYl_866kJBAhON_47jg6/view?usp=sharing
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

@@ -2,7 +2,7 @@ import 'package:firman_dot/component/database/database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-// import 'package:notification_center/notification_center.dart';
+import 'package:notification_center/notification_center.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 import '../../../component/model/expense_category.dart';
@@ -85,7 +85,7 @@ class AddExpenseController extends GetxController {
       "dateExpense": dateExpense,
       "nominal": nominal,
     });
-    // NotificationCenter().notify('refresh-expense');
+    NotificationCenter().notify('refresh-expense');
     await AlertModel.showAlert(
         title: "Add Expense",
         message: "Berhasil menambahkan Pengeluaran",

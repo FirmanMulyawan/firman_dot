@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -44,19 +45,11 @@ class HomeScreen extends GetView<HomeController> {
                 ),
                 Row(
                   children: [
-                    Expanded(
-                      child: _cardExpense(
-                          title: 'Pengeluaranmu\nhari ini', nominal: "30.000"),
-                    ),
+                    _cardExpenseTonday(),
                     SizedBox(
                       width: 19,
                     ),
-                    Expanded(
-                      child: _cardExpense(
-                          color: AppStyle.teal,
-                          title: 'Pengeluaranmu\nbulan ini',
-                          nominal: "335.500"),
-                    )
+                    _cardExpenseMonth(),
                   ],
                 ),
                 SizedBox(
@@ -66,17 +59,9 @@ class HomeScreen extends GetView<HomeController> {
                   "Pengeluaran berdasarkan kategori",
                   style: AppStyle.bold(),
                 ),
+                _expenseCategory(),
                 SizedBox(
-                  height: 20,
-                ),
-                ExpenseCategoryCard(
-                  backgroundColorIcon: AppStyle.yellow,
-                  iconCard: AppConst.iconBasketball,
-                  title: "Internet",
-                  totalAmount: "Rp. 20.000",
-                ),
-                SizedBox(
-                  height: 28,
+                  height: 8,
                 ),
                 _dailyExpenseList(),
                 SizedBox(
@@ -110,99 +95,213 @@ class HomeScreen extends GetView<HomeController> {
     );
   }
 
-  Widget _dailyExpenseList() {
-    return FutureBuilder<Map<String, List<Map<String, dynamic>>>>(
-        future: controller.getExpenseDaily(),
-        builder: (context, snapshort) {
-          if (snapshort.connectionState == ConnectionState.waiting) {
-            return Skeletonizer(
-              enabled: true,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Hari ini",
-                    style: AppStyle.bold(),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _dailyExpenseCards(
-                      colorIcon: AppStyle.blue,
-                      iconName: AppConst.iconBasketball,
-                      title: 'Ayam Geprek',
-                      price: 'Rp. 15.000'),
-                  SizedBox(
-                    height: 28,
-                  ),
-                  Text(
-                    "Kemarin",
-                    style: AppStyle.bold(),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _dailyExpenseCards(
-                      colorIcon: AppStyle.blue,
-                      iconName: AppConst.iconBasketball,
-                      title: 'Ayam Geprek',
-                      price: 'Rp. 15.000'),
-                ],
-              ),
-            );
-          }
+  Widget _cardExpenseTonday() {
+    return Expanded(
+      child: GetBuilder<HomeController>(builder: (ctrl) {
+        return FutureBuilder<int>(
+            future: ctrl.getExpenseToday(),
+            builder: (context, snapshort) {
+              if (snapshort.connectionState == ConnectionState.waiting) {
+                return _cardExpense(
+                    title: 'Pengeluaranmu\nhari ini', nominal: "30.000");
+              }
 
-          if (snapshort.data?.isEmpty == true) {
-            return Center(
-              child: Text("Data Pengeluaran Belum Ada"),
-            );
-          }
+              if (snapshort.data == 0) {
+                return _cardExpense(
+                    title: 'Pengeluaranmu\nhari ini', nominal: "Rp. 0");
+              }
 
-          final data =
-              snapshort.data as Map<String, List<Map<String, dynamic>>>;
-          return Column(
-              children: data.entries.map(
-            (entry) {
-              final date = entry.key;
-              final expenses = entry.value;
-
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    formatDateLabel(date),
-                    style: AppStyle.bold(),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Column(
-                    children: expenses.map((value) {
-                      return Column(
-                        children: [
-                          _dailyExpenseCards(
-                              colorIcon: ExpenseCategoryExtension.fromLabel(
-                                      value['category'])
-                                  .color,
-                              iconName: ExpenseCategoryExtension.fromLabel(
-                                      value['category'])
-                                  .icon,
-                              title: value['name'],
-                              price: formatRupiah(value['nominal'])),
-                          const SizedBox(height: 20),
-                        ],
-                      );
-                    }).toList(),
-                  )
-                ],
-              );
-            },
-          ).toList());
-        });
+              final data = snapshort.data as int;
+              return _cardExpense(
+                  title: 'Pengeluaranmu\nhari ini',
+                  nominal: formatRupiah(data));
+            });
+      }),
+    );
   }
 
+  Widget _cardExpenseMonth() {
+    return Expanded(
+      child: GetBuilder<HomeController>(builder: (ctrl) {
+        return FutureBuilder<int>(
+            future: ctrl.getExpenseMonth(),
+            builder: (context, snapshort) {
+              if (snapshort.connectionState == ConnectionState.waiting) {
+                return _cardExpense(
+                    color: AppStyle.teal,
+                    title: 'Pengeluaranmu\nbulan ini',
+                    nominal: "Rp. 335.500");
+              }
+
+              if (snapshort.data == 0) {
+                return _cardExpense(
+                    color: AppStyle.teal,
+                    title: 'Pengeluaranmu\nbulan ini',
+                    nominal: "Rp. 0");
+              }
+              final data = snapshort.data as int;
+
+              return _cardExpense(
+                  color: AppStyle.teal,
+                  title: 'Pengeluaranmu\nbulan ini',
+                  nominal: formatRupiah(data));
+            });
+      }),
+    );
+  }
+
+  Widget _dailyExpenseList() {
+    return GetBuilder<HomeController>(builder: (ctrl) {
+      return FutureBuilder<Map<String, List<Map<String, dynamic>>>>(
+          future: ctrl.getExpenseDaily(),
+          builder: (context, snapshort) {
+            if (snapshort.connectionState == ConnectionState.waiting) {
+              return Skeletonizer(
+                enabled: true,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Hari ini",
+                      style: AppStyle.bold(),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    _dailyExpenseCards(
+                        colorIcon: AppStyle.blue,
+                        iconName: AppConst.iconBasketball,
+                        title: 'Ayam Geprek',
+                        price: 'Rp. 15.000'),
+                    SizedBox(
+                      height: 28,
+                    ),
+                    Text(
+                      "Kemarin",
+                      style: AppStyle.bold(),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    _dailyExpenseCards(
+                        colorIcon: AppStyle.blue,
+                        iconName: AppConst.iconBasketball,
+                        title: 'Ayam Geprek',
+                        price: 'Rp. 15.000'),
+                  ],
+                ),
+              );
+            }
+
+            if (snapshort.data?.isEmpty == true) {
+              return Center(
+                child: Text("Data Pengeluaran Belum Ada"),
+              );
+            }
+
+            final data =
+                snapshort.data as Map<String, List<Map<String, dynamic>>>;
+            return Column(
+                children: data.entries.map(
+              (entry) {
+                final date = entry.key;
+                final expenses = entry.value;
+
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      formatDateLabel(date),
+                      style: AppStyle.bold(),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Column(
+                      children: expenses.map((value) {
+                        return Column(
+                          children: [
+                            _dailyExpenseCards(
+                                colorIcon: ExpenseCategoryExtension.fromLabel(
+                                        value['category'])
+                                    .color,
+                                iconName: ExpenseCategoryExtension.fromLabel(
+                                        value['category'])
+                                    .icon,
+                                title: value['name'],
+                                price: formatRupiah(value['nominal'])),
+                            const SizedBox(height: 20),
+                          ],
+                        );
+                      }).toList(),
+                    )
+                  ],
+                );
+              },
+            ).toList());
+          });
+    });
+  }
+
+  Widget _expenseCategory() {
+    return GetBuilder<HomeController>(builder: (ctrl) {
+      return FutureBuilder<List<Map<String, dynamic>>>(
+          future: ctrl.getExpenseCategory(),
+          builder: (context, snapshort) {
+            if (snapshort.connectionState == ConnectionState.waiting) {
+              return Skeletonizer(
+                enabled: true,
+                child: ExpenseCategoryCard(
+                  backgroundColorIcon: AppStyle.yellow,
+                  iconCard: AppConst.iconBasketball,
+                  title: "Internet",
+                  totalAmount: "Rp. 20.000",
+                ),
+              );
+            }
+
+            if (snapshort.data?.isEmpty == true) {
+              return Center(
+                child: Text("Data Pengeluaran berdasarkan kategori Belum Ada"),
+              );
+            }
+
+            final data = snapshort.data as List<Map<String, dynamic>>;
+
+            return SizedBox(
+              height: 180,
+              child: AlignedGridView.count(
+                  shrinkWrap: true,
+                  crossAxisCount: 1,
+                  scrollDirection: Axis.horizontal,
+                  addRepaintBoundaries: false,
+                  itemCount: data.length,
+                  itemBuilder: (ctx, index) {
+                    return Container(
+                      margin:
+                          EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                      child: ExpenseCategoryCard(
+                        backgroundColorIcon: ExpenseCategoryExtension.fromLabel(
+                                data[index]['category'])
+                            .color,
+                        iconCard: ExpenseCategoryExtension.fromLabel(
+                                data[index]['category'])
+                            .icon,
+                        title: ExpenseCategoryExtension.fromLabel(
+                                data[index]['category'])
+                            .label,
+                        totalAmount: formatRupiah(data[index]["total"]),
+                      ),
+                    );
+                  }),
+            );
+          });
+    });
+  }
+
+  // === reusable widget
   Widget _cardExpense({Color? color, String title = '', String nominal = ''}) {
     return Container(
       padding: EdgeInsets.all(14),
@@ -221,7 +320,7 @@ class HomeScreen extends GetView<HomeController> {
           SizedBox(
             height: 15,
           ),
-          Text("Rp. $nominal",
+          Text(nominal,
               style: AppStyle.bold(textColor: AppStyle.whiteColor, size: 18))
         ],
       ),

@@ -54,6 +54,7 @@ class AddExpenseScreen extends GetView<AddExpenseController> {
                           onTapOutside: (PointerDownEvent event) {
                             FocusManager.instance.primaryFocus?.unfocus();
                           },
+                          autocorrect: false,
                           controller: ctrl.expenseController,
                           onChanged: (string) {
                             ctrl.validate();
